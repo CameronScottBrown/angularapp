@@ -11,6 +11,11 @@ import { PostService } from '../../services/post.service';
 export class PostsComponent implements OnInit {
 
   posts: Post[];
+  currentPost: Post = {
+    id: 0,          //default values, sets in methods
+    title: '',
+    body: ''
+  };
 
   constructor(private postService: PostService) { }
 
@@ -19,6 +24,15 @@ export class PostsComponent implements OnInit {
       this.posts = posts;
     });
     
+  }
+
+  onNewPost(post: Post){
+    this.posts.unshift(post);
+  }
+
+  editPost(post: Post){
+    this.currentPost = post; //sets current post
+
   }
 
 }
