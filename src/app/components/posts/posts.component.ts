@@ -15,7 +15,9 @@ export class PostsComponent implements OnInit {
     id: 0,          //default values, sets in methods
     title: '',
     body: ''
-  };
+  }
+
+  isEdit: boolean = false;
 
   constructor(private postService: PostService) { }
 
@@ -32,7 +34,37 @@ export class PostsComponent implements OnInit {
 
   editPost(post: Post){
     this.currentPost = post; //sets current post
+    this.isEdit = true;
+  }
 
+  onUpdatedPost(post: Post){
+
+    this.posts.forEach((cur, index)=>{
+      if(post.id === cur.id){
+        this.posts.splice(index, 1);
+        this.posts.unshift(post);
+        this.isEdit = false;
+
+        this.currentPost = {
+          id: 0,
+          title: '',
+          body: ''
+        }
+      }
+    });
+    
+  }
+
+  removePost(post: Post){
+    if(confirm('You are about to delete this post permanently. Are you sure?')){
+      this.postService.removePost(post.id).subscribe(()=>{
+          this.posts.forEach((cur, index)=>{
+            if(post.id === cur.id){
+              this.posts.splice(index, 1);
+            }
+          });
+      });
+    }
   }
 
 }
